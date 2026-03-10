@@ -1,693 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FleetDesk – Corporate Transport</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚘</text></svg>" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:#0F172A;color:#E2E8F0;font-family:'DM Sans',sans-serif;}
-    input,select,textarea,button{font-family:'DM Sans',sans-serif;}
-    @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-    ::-webkit-scrollbar{width:5px}
-    ::-webkit-scrollbar-track{background:#1E293B}
-    ::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:#3B82F6 !important;}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FleetDesk – Corporate Transport</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0F172A;color:#E2E8F0;font-family:'DM Sans',sans-serif;min-height:100vh}
+input,select,textarea,button{font-family:'DM Sans',sans-serif}
+.inp{width:100%;padding:10px 14px;border-radius:9px;border:1px solid #334155;background:#0F172A;color:#E2E8F0;font-size:14px;outline:none;transition:border-color .2s}
+.inp:focus{border-color:#3B82F6}
+.btn-primary{padding:9px 18px;border-radius:9px;border:none;cursor:pointer;background:linear-gradient(135deg,#3B82F6,#6366F1);color:white;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif}
+.btn-ghost{padding:9px 18px;border-radius:9px;border:1px solid #334155;cursor:pointer;background:transparent;color:#94A3B8;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif}
+.btn-danger{padding:5px 10px;border-radius:7px;border:1px solid #450A0A;cursor:pointer;background:transparent;color:#EF4444;font-size:12px;font-family:'DM Sans',sans-serif}
+.btn-edit{padding:5px 10px;border-radius:7px;border:1px solid #334155;cursor:pointer;background:transparent;color:#94A3B8;font-size:12px;font-family:'DM Sans',sans-serif}
+.card{background:#1E293B;border-radius:16px;padding:24px;border:1px solid #334155}
+.section-label{font-size:11px;font-weight:700;color:#64748B;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;margin-top:4px}
+.field-label{font-size:12px;font-weight:600;color:#64748B;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.flex{display:flex;align-items:center}
+.gap8{gap:8px}
+.gap10{gap:10px}
+.gap12{gap:12px}
+.notif{position:fixed;top:20px;right:20px;z-index:9999;padding:11px 20px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.35);animation:slideIn .3s ease;pointer-events:none}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#1E293B;border-radius:18px;padding:28px;max-width:540px;width:100%;border:1px solid #334155;animation:modalIn .2s ease;max-height:90vh;overflow-y:auto}
+.toggle{width:42px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-thumb{width:18px;height:18px;border-radius:50%;background:white;position:absolute;top:2px;transition:left .2s}
+.ride-btn{padding:13px 8px;border-radius:10px;border:2px solid #1E293B;background:#1E293B;cursor:pointer;transition:all .18s;text-align:center;width:100%}
+.ride-btn:hover{border-color:#334155}
+.status-sel{padding:7px 10px;border-radius:8px;border:1px solid #334155;background:#0F172A;color:#E2E8F0;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#1E293B}::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+.sidebar-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-size:14px;margin-bottom:3px;text-align:left;transition:all .15s;font-family:'DM Sans',sans-serif}
+.req-row{background:#1E293B;border-radius:13px;padding:18px 20px;border:1px solid #334155;margin-bottom:10px}
+.driver-card{background:#1E293B;border-radius:14px;padding:20px;border:1px solid #334155}
+.dest-row{background:#1E293B;border-radius:12px;padding:16px 20px;border:1px solid #334155;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.dept-chip{background:#1E293B;border-radius:11px;padding:13px 16px;border:1px solid #334155;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rt-card{background:#1E293B;border-radius:14px;padding:18px;border:1px solid #334155}
+.tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+.stat-card{background:#1E293B;border-radius:12px;padding:18px 20px;border:1px solid #334155}
+#view-employee,#view-admin{display:none}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect } = React;
 
-// ── Default Data ──────────────────────────────────────────────
-const DEFAULT_DRIVERS = [
-  { id: 1, name: "Khalid Al-Rashidi",   phone: "+966 50 111 2233", vehicle: "Toyota Camry",    color: "White",  plate: "KSA-1234", available: true,  avatar: "KA", email: "khalid@fleet.com" },
-  { id: 2, name: "Mohammed Al-Zahrani", phone: "+966 50 444 5566", vehicle: "Hyundai Sonata",  color: "Black",  plate: "KSA-5678", available: true,  avatar: "MZ", email: "mohammed@fleet.com" },
-  { id: 3, name: "Abdullah Faris",      phone: "+966 50 777 8899", vehicle: "Kia Optima",      color: "Silver", plate: "KSA-9012", available: false, avatar: "AF", email: "abdullah@fleet.com" },
-  { id: 4, name: "Sami Al-Otaibi",      phone: "+966 50 000 1122", vehicle: "Toyota Corolla",  color: "Grey",   plate: "KSA-3456", available: true,  avatar: "SO", email: "sami@fleet.com" },
+<!-- TOP NAV -->
+<div style="border-bottom:1px solid #1E293B;background:#0A1120;position:sticky;top:0;z-index:100">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:62px">
+    <div class="flex gap12">
+      <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:17px">🚘</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#F8FAFC;letter-spacing:-.3px">FleetDesk</div>
+        <div style="font-size:10px;color:#475569;letter-spacing:.5px;text-transform:uppercase">Corporate Transport</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px;background:#1E293B;border-radius:10px;padding:4px">
+      <button onclick="switchView('employee')" id="nav-employee" style="padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s">👤 Request Ride</button>
+      <button onclick="switchView('admin')" id="nav-admin" style="padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s">🛡️ Admin</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE VIEW -->
+<div id="view-employee" style="max-width:680px;margin:0 auto;padding:40px 24px">
+  <div id="form-section">
+    <div style="margin-bottom:28px">
+      <h1 style="font-size:27px;font-weight:700;color:#F8FAFC;margin:0">Request a Ride</h1>
+      <p style="color:#64748B;margin-top:5px;font-size:14px">Submit your transport request and our team will assign a driver.</p>
+    </div>
+    <div class="card">
+      <div class="section-label">Your Information</div>
+      <div class="grid2" style="margin-bottom:20px">
+        <div><label class="field-label">Full Name *</label><input class="inp" id="f-name" placeholder="e.g. Ahmed Al-Sayed"/></div>
+        <div><label class="field-label">Department</label><select class="inp" id="f-dept"><option value="">Select department...</option></select></div>
+      </div>
+      <div class="section-label">Ride Type *</div>
+      <div id="ride-type-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:20px"></div>
+      <div class="section-label">Route Details</div>
+      <div style="margin-bottom:14px"><label class="field-label">Pickup Location *</label><input class="inp" id="f-pickup" list="pickup-list" placeholder="Type or select..."/><datalist id="pickup-list"></datalist></div>
+      <div style="margin-bottom:20px"><label class="field-label">Destination *</label><input class="inp" id="f-dest" list="dest-list" placeholder="Type or select..."/><datalist id="dest-list"></datalist></div>
+      <div class="section-label">Schedule</div>
+      <div class="grid3" style="margin-bottom:20px">
+        <div><label class="field-label">Date *</label><input type="date" class="inp" id="f-date"/></div>
+        <div><label class="field-label">Time *</label><input type="time" class="inp" id="f-time"/></div>
+        <div><label class="field-label">Passengers</label><select class="inp" id="f-pass"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+      </div>
+      <div class="section-label">Notes</div>
+      <textarea class="inp" id="f-notes" rows="3" placeholder="Special requirements, return trip, luggage..." style="resize:vertical;margin-bottom:22px"></textarea>
+      <button class="btn-primary" onclick="submitRequest()" style="width:100%;padding:15px;border-radius:12px;font-size:15px">Submit Ride Request →</button>
+    </div>
+  </div>
+  <div id="success-section" style="display:none">
+    <div class="card" style="text-align:center;padding:56px 40px">
+      <div style="font-size:58px;margin-bottom:14px">✅</div>
+      <h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0 0 8px">Request Submitted!</h2>
+      <p style="color:#64748B;margin-bottom:8px;font-size:14px">Your request ID</p>
+      <div id="success-id" style="display:inline-block;background:#0F172A;padding:10px 28px;border-radius:10px;font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:#3B82F6;margin-bottom:20px"></div>
+      <p style="color:#64748B;font-size:13px;margin-bottom:28px">The transport admin will assign a driver shortly.</p>
+      <button onclick="resetForm()" style="padding:11px 28px;border-radius:10px;border:2px solid #3B82F6;background:transparent;color:#3B82F6;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Submit Another</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="view-admin" style="display:flex;min-height:calc(100vh - 62px)">
+  <!-- Sidebar -->
+  <div style="width:220px;background:#0A1120;border-right:1px solid #1E293B;padding:20px 12px;flex-shrink:0">
+    <div style="font-size:10px;font-weight:700;color:#334155;letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:10px">Management</div>
+    <button class="sidebar-btn" id="stab-dashboard" onclick="switchAdminTab('dashboard')">📊 Dashboard</button>
+    <button class="sidebar-btn" id="stab-drivers" onclick="switchAdminTab('drivers')">🧑‍✈️ Drivers</button>
+    <button class="sidebar-btn" id="stab-destinations" onclick="switchAdminTab('destinations')">📍 Destinations</button>
+    <button class="sidebar-btn" id="stab-departments" onclick="switchAdminTab('departments')">🏢 Departments</button>
+    <button class="sidebar-btn" id="stab-ridetypes" onclick="switchAdminTab('ridetypes')">🎛️ Ride Types</button>
+  </div>
+  <!-- Content -->
+  <div style="flex:1;padding:28px;overflow-y:auto">
+    <div id="atab-dashboard"></div>
+    <div id="atab-drivers" style="display:none"></div>
+    <div id="atab-destinations" style="display:none"></div>
+    <div id="atab-departments" style="display:none"></div>
+    <div id="atab-ridetypes" style="display:none"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-overlay" style="display:none" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div id="notif" class="notif" style="display:none"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA STORE
+// ═══════════════════════════════════════════
+var drivers = [
+  {id:1,name:"Khalid Al-Rashidi",phone:"+966 50 111 2233",email:"khalid@fleet.com",vehicle:"Toyota Camry",color:"White",plate:"KSA-1234",available:true},
+  {id:2,name:"Mohammed Al-Zahrani",phone:"+966 50 444 5566",email:"mohammed@fleet.com",vehicle:"Hyundai Sonata",color:"Black",plate:"KSA-5678",available:true},
+  {id:3,name:"Abdullah Faris",phone:"+966 50 777 8899",email:"abdullah@fleet.com",vehicle:"Kia Optima",color:"Silver",plate:"KSA-9012",available:false},
+  {id:4,name:"Sami Al-Otaibi",phone:"+966 50 000 1122",email:"sami@fleet.com",vehicle:"Toyota Corolla",color:"Grey",plate:"KSA-3456",available:true}
 ];
-
-const DEFAULT_DESTINATIONS = [
-  { id: 1, name: "King Abdulaziz International Airport", category: "Airport", address: "Airport Rd, Jeddah" },
-  { id: 2, name: "Dr. Sulaiman Al Habib Hospital",       category: "Medical", address: "Al Rawdah, Jeddah" },
-  { id: 3, name: "Head Office – Tower A",                category: "Office",  address: "King Fahd Road, Jeddah" },
-  { id: 4, name: "Head Office – Tower B",                category: "Office",  address: "King Fahd Road, Jeddah" },
-  { id: 5, name: "Hilton Jeddah",                        category: "Hotel",   address: "Corniche Road, Jeddah" },
-  { id: 6, name: "DHL Logistics Center",                 category: "Courier", address: "Industrial Area, Jeddah" },
+var destinations = [
+  {id:1,name:"King Abdulaziz International Airport",category:"Airport",address:"Airport Rd, Jeddah"},
+  {id:2,name:"Dr. Sulaiman Al Habib Hospital",category:"Medical",address:"Al Rawdah, Jeddah"},
+  {id:3,name:"Head Office – Tower A",category:"Office",address:"King Fahd Road, Jeddah"},
+  {id:4,name:"Head Office – Tower B",category:"Office",address:"King Fahd Road, Jeddah"},
+  {id:5,name:"Hilton Jeddah",category:"Hotel",address:"Corniche Road, Jeddah"},
+  {id:6,name:"DHL Logistics Center",category:"Courier",address:"Industrial Area, Jeddah"}
 ];
-
-const DEFAULT_DEPARTMENTS = ["Finance","Human Resources","IT","Operations","Legal","Marketing","Executive","Procurement","Logistics","Administration"];
-
-const DEFAULT_RIDE_TYPES = [
-  { id: "airport", label: "Airport Transfer", icon: "✈️", color: "#3B82F6" },
-  { id: "medical", label: "Medical Visit",    icon: "🏥", color: "#EF4444" },
-  { id: "meeting", label: "Business Meeting", icon: "💼", color: "#8B5CF6" },
-  { id: "courier", label: "Shipment/Courier", icon: "📦", color: "#F59E0B" },
-  { id: "hotel",   label: "Hotel Transfer",   icon: "🏨", color: "#10B981" },
-  { id: "personal",label: "Personal Errand",  icon: "🚗", color: "#6B7280" },
+var departments = ["Finance","Human Resources","IT","Operations","Legal","Marketing","Executive","Procurement","Logistics","Administration"];
+var rideTypes = [
+  {id:"airport",label:"Airport Transfer",icon:"✈️",color:"#3B82F6"},
+  {id:"medical",label:"Medical Visit",icon:"🏥",color:"#EF4444"},
+  {id:"meeting",label:"Business Meeting",icon:"💼",color:"#8B5CF6"},
+  {id:"courier",label:"Shipment/Courier",icon:"📦",color:"#F59E0B"},
+  {id:"hotel",label:"Hotel Transfer",icon:"🏨",color:"#10B981"},
+  {id:"personal",label:"Personal Errand",icon:"🚗",color:"#6B7280"}
 ];
-
-const STATUS_CONFIG = {
-  pending:    { label: "Pending",     bg: "#FEF3C7", color: "#92400E", dot: "#F59E0B" },
-  assigned:   { label: "Assigned",    bg: "#D1FAE5", color: "#065F46", dot: "#10B981" },
-  inprogress: { label: "In Progress", bg: "#DBEAFE", color: "#1E40AF", dot: "#3B82F6" },
-  completed:  { label: "Completed",   bg: "#F3F4F6", color: "#374151", dot: "#9CA3AF" },
-};
-
-const INITIAL_REQUESTS = [
-  { id: "RQ-001", employee: "Fatima Al-Harbi", department: "Finance", type: "airport", pickup: "Head Office – Tower A", destination: "King Abdulaziz International Airport", date: "2026-03-11", time: "06:00", notes: "Flight at 09:00", status: "assigned", driver: 1, submittedAt: "2026-03-10T08:30:00", passengers: 1 },
-  { id: "RQ-002", employee: "Omar Al-Shehri",  department: "HR",      type: "medical", pickup: "Head Office – Tower B", destination: "Dr. Sulaiman Al Habib Hospital",       date: "2026-03-10", time: "14:30", notes: "Return trip needed", status: "pending", driver: null, submittedAt: "2026-03-10T10:15:00", passengers: 1 },
+var requests = [
+  {id:"RQ-001",employee:"Fatima Al-Harbi",department:"Finance",type:"airport",pickup:"Head Office – Tower A",destination:"King Abdulaziz International Airport",date:"2026-03-11",time:"06:00",notes:"Flight at 09:00",status:"assigned",driver:1,passengers:1,submittedAt:"2026-03-10T08:30:00"},
+  {id:"RQ-002",employee:"Omar Al-Shehri",department:"Human Resources",type:"medical",pickup:"Head Office – Tower B",destination:"Dr. Sulaiman Al Habib Hospital",date:"2026-03-10",time:"14:30",notes:"Return trip needed",status:"pending",driver:null,passengers:1,submittedAt:"2026-03-10T10:15:00"}
 ];
+var selectedType = "";
+var filterStatus = "all";
+var currentView = "employee";
+var currentAdminTab = "dashboard";
 
-// ── Helpers ───────────────────────────────────────────────────
-function genId() { return `RQ-${Math.floor(Math.random()*900)+100}`; }
-function timeAgo(iso) {
-  const d = (Date.now() - new Date(iso))/1000;
-  if (d < 60) return "just now";
-  if (d < 3600) return `${Math.floor(d/60)}m ago`;
-  return `${Math.floor(d/3600)}h ago`;
-}
-function initials(name) { return name.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase(); }
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+function genId(){return "RQ-"+(Math.floor(Math.random()*900)+100)}
+function initials(n){return n.split(" ").slice(0,2).map(function(w){return w[0]}).join("").toUpperCase()}
+function timeAgo(iso){var d=(Date.now()-new Date(iso))/1000;if(d<60)return"just now";if(d<3600)return Math.floor(d/60)+"m ago";return Math.floor(d/3600)+"h ago"}
+function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function statusCfg(s){var m={pending:{label:"Pending",bg:"#FEF3C7",color:"#92400E",dot:"#F59E0B"},assigned:{label:"Assigned",bg:"#D1FAE5",color:"#065F46",dot:"#10B981"},inprogress:{label:"In Progress",bg:"#DBEAFE",color:"#1E40AF",dot:"#3B82F6"},completed:{label:"Completed",bg:"#F3F4F6",color:"#374151",dot:"#9CA3AF"}};return m[s]||m.pending}
+function catColor(c){var m={Airport:"#3B82F6",Medical:"#EF4444",Office:"#8B5CF6",Hotel:"#10B981",Courier:"#F59E0B"};return m[c]||"#6B7280"}
+function notify(msg,type){var el=document.getElementById("notif");el.textContent=(type==="error"?"⚠️ ":"✓ ")+msg;el.style.background=type==="error"?"#EF4444":"#10B981";el.style.color="white";el.style.display="block";setTimeout(function(){el.style.display="none"},3200)}
+function closeModal(){document.getElementById("modal").style.display="none"}
 
-// ── Shared Styles ─────────────────────────────────────────────
-const IS = { width:"100%", padding:"10px 14px", borderRadius:10, border:"1px solid #334155", background:"#0F172A", color:"#E2E8F0", fontSize:14 };
-
-function Field({ label, value, onChange, placeholder, type="text", children }) {
-  return (
-    <div>
-      <label style={{ fontSize:12, fontWeight:600, color:"#64748B", letterSpacing:"0.5px", textTransform:"uppercase", display:"block", marginBottom:7 }}>{label}</label>
-      {children || <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} style={IS} />}
-    </div>
-  );
+// ═══════════════════════════════════════════
+// VIEW SWITCHING
+// ═══════════════════════════════════════════
+function switchView(v){
+  currentView=v;
+  document.getElementById("view-employee").style.display=v==="employee"?"block":"none";
+  document.getElementById("view-admin").style.display=v==="admin"?"flex":"none";
+  var ea=document.getElementById("nav-employee"),aa=document.getElementById("nav-admin");
+  ea.style.background=v==="employee"?"#3B82F6":"transparent";
+  ea.style.color=v==="employee"?"white":"#94A3B8";
+  aa.style.background=v==="admin"?"#3B82F6":"transparent";
+  aa.style.color=v==="admin"?"white":"#94A3B8";
+  if(v==="admin") switchAdminTab(currentAdminTab);
 }
-function SL({ children }) {
-  return <div style={{ fontSize:11, fontWeight:700, color:"#64748B", letterSpacing:"0.8px", textTransform:"uppercase", marginBottom:12, marginTop:4 }}>{children}</div>;
-}
-function Card({ children, style={} }) {
-  return <div style={{ background:"#1E293B", borderRadius:18, padding:24, border:"1px solid #334155", ...style }}>{children}</div>;
-}
-function Btn({ children, onClick, variant="primary", style={}, disabled=false }) {
-  const bg = variant==="primary"?"linear-gradient(135deg,#3B82F6,#6366F1)":variant==="danger"?"#EF4444":variant==="ghost"?"transparent":"#1E293B";
-  const border = variant==="ghost"?"1px solid #334155":"none";
-  return (
-    <button onClick={onClick} disabled={disabled} style={{ padding:"9px 18px", borderRadius:9, border, cursor:disabled?"not-allowed":"pointer", background:bg, color:variant==="secondary"?"#94A3B8":"white", fontSize:13, fontWeight:600, opacity:disabled?0.5:1, ...style }}>
-      {children}
-    </button>
-  );
-}
-function Badge({ status }) {
-  const sc = STATUS_CONFIG[status];
-  return <span style={{ fontSize:11, background:sc.bg, color:sc.color, padding:"3px 10px", borderRadius:20, fontWeight:600, whiteSpace:"nowrap" }}>
-    <span style={{ display:"inline-block", width:6, height:6, borderRadius:"50%", background:sc.dot, marginRight:5 }}></span>{sc.label}
-  </span>;
-}
-function Modal({ title, subtitle, onClose, children }) {
-  return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", zIndex:300, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }} onClick={onClose}>
-      <div style={{ background:"#1E293B", borderRadius:18, padding:28, maxWidth:540, width:"100%", border:"1px solid #334155", animation:"modalIn 0.2s ease", maxHeight:"90vh", overflowY:"auto" }} onClick={e=>e.stopPropagation()}>
-        <div style={{ marginBottom:20 }}>
-          <div style={{ fontSize:18, fontWeight:700, color:"#F8FAFC" }}>{title}</div>
-          {subtitle && <div style={{ fontSize:13, color:"#64748B", marginTop:4 }}>{subtitle}</div>}
-        </div>
-        {children}
-      </div>
-    </div>
-  );
+function switchAdminTab(tab){
+  currentAdminTab=tab;
+  ["dashboard","drivers","destinations","departments","ridetypes"].forEach(function(t){
+    document.getElementById("atab-"+t).style.display=t===tab?"block":"none";
+    var btn=document.getElementById("stab-"+t);
+    btn.style.background=t===tab?"#1E293B":"transparent";
+    btn.style.color=t===tab?"#F8FAFC":"#64748B";
+    btn.style.fontWeight=t===tab?"600":"400";
+  });
+  var renders={dashboard:renderDashboard,drivers:renderDrivers,destinations:renderDestinations,departments:renderDepartments,ridetypes:renderRideTypes};
+  if(renders[tab]) renders[tab]();
 }
 
-// ── MAIN APP ──────────────────────────────────────────────────
-function App() {
-  const [view, setView]           = useState("employee");
-  const [adminTab, setAdminTab]   = useState("dashboard");
-  const [requests, setRequests]   = useState(INITIAL_REQUESTS);
-  const [drivers, setDrivers]     = useState(DEFAULT_DRIVERS);
-  const [destinations, setDests]  = useState(DEFAULT_DESTINATIONS);
-  const [departments, setDepts]   = useState(DEFAULT_DEPARTMENTS);
-  const [rideTypes, setRideTypes] = useState(DEFAULT_RIDE_TYPES);
-  const [submitted, setSubmitted] = useState(false);
-  const [newReqId, setNewReqId]   = useState(null);
-  const [selectedReq, setSelectedReq] = useState(null);
-  const [filterStatus, setFilter] = useState("all");
-  const [notif, setNotif]         = useState(null);
-  const [aiText, setAiText]       = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [modal, setModal]         = useState(null); // { type, data }
-
-  const [form, setForm] = useState({ employee:"", department:"", type:"", pickup:"", destination:"", date:"", time:"", passengers:"1", notes:"" });
-
-  const notify = (msg, type="success") => { setNotif({msg,type}); setTimeout(()=>setNotif(null),3200); };
-
-  // ── Employee Submit ──
-  const handleSubmit = () => {
-    if (!form.employee||!form.type||!form.pickup||!form.destination||!form.date||!form.time) { notify("Please fill all required fields.","error"); return; }
-    const id = genId();
-    setRequests(p=>[{ id, ...form, passengers:parseInt(form.passengers), status:"pending", driver:null, submittedAt:new Date().toISOString() },...p]);
-    setNewReqId(id); setSubmitted(true);
-  };
-  const handleReset = () => { setForm({ employee:"",department:"",type:"",pickup:"",destination:"",date:"",time:"",passengers:"1",notes:"" }); setSubmitted(false); setNewReqId(null); };
-
-  // ── Admin Actions ──
-  const handleAssign = (reqId, driverId) => {
-    setRequests(p=>p.map(r=>r.id===reqId?{...r,driver:driverId,status:driverId?"assigned":"pending"}:r));
-    const d = drivers.find(d=>d.id===driverId);
-    notify(d?`Assigned to ${d.name}`:"Driver unassigned");
-    setSelectedReq(null);
-  };
-  const handleStatusChange = (reqId, status) => setRequests(p=>p.map(r=>r.id===reqId?{...r,status}:r));
-
-  const getAiSuggestion = async (req) => {
-    setAiLoading(true); setAiText(null);
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:300,
-          messages:[{role:"user",content:`Fleet coordinator: suggest best driver.\nEmployee: ${req.employee} (${req.department})\nType: ${req.type}\nFrom: ${req.pickup} → To: ${req.destination}\nDate/Time: ${req.date} ${req.time}\nPassengers: ${req.passengers}\nNotes: ${req.notes||"none"}\nAvailable drivers: ${drivers.filter(d=>d.available).map(d=>d.name+" ("+d.vehicle+")").join(", ")}\nRecommend one driver by name, 2-3 sentences.`}]
-        })
-      });
-      const data = await res.json();
-      setAiText(data.content?.[0]?.text||"No suggestion.");
-    } catch { setAiText("Could not get AI suggestion."); }
-    setAiLoading(false);
-  };
-
-  // ── Driver CRUD ──
-  const saveDriver = (d) => {
-    if (d.id) setDrivers(p=>p.map(x=>x.id===d.id?d:x));
-    else setDrivers(p=>[...p,{...d,id:Date.now(),avatar:initials(d.name)}]);
-    setModal(null); notify(d.id?"Driver updated":"Driver added");
-  };
-  const deleteDriver = (id) => { setDrivers(p=>p.filter(d=>d.id!==id)); notify("Driver removed","error"); };
-  const toggleAvail = (id) => setDrivers(p=>p.map(d=>d.id===id?{...d,available:!d.available}:d));
-
-  // ── Destination CRUD ──
-  const saveDest = (d) => {
-    if (d.id) setDests(p=>p.map(x=>x.id===d.id?d:x));
-    else setDests(p=>[...p,{...d,id:Date.now()}]);
-    setModal(null); notify(d.id?"Destination updated":"Destination added");
-  };
-  const deleteDest = (id) => { setDests(p=>p.filter(d=>d.id!==id)); notify("Destination removed","error"); };
-
-  // ── Department CRUD ──
-  const addDept = (name) => { if (!departments.includes(name)) setDepartments(p=>[...p,name]); };
-  const setDepartments = setDepts;
-
-  const filteredReqs = filterStatus==="all"?requests:requests.filter(r=>r.status===filterStatus);
-  const stats = { total:requests.length, pending:requests.filter(r=>r.status==="pending").length, assigned:requests.filter(r=>r.status==="assigned").length, inprogress:requests.filter(r=>r.status==="inprogress").length };
-
-  const NAV_TABS = [
-    { id:"dashboard", icon:"📊", label:"Dashboard" },
-    { id:"drivers",   icon:"🧑‍✈️", label:"Drivers" },
-    { id:"destinations", icon:"📍", label:"Destinations" },
-    { id:"departments",  icon:"🏢", label:"Departments" },
-    { id:"ridetypes",    icon:"🎛️", label:"Ride Types" },
-  ];
-
-  return (
-    <div style={{ fontFamily:"'DM Sans',sans-serif", minHeight:"100vh", background:"#0F172A", color:"#E2E8F0" }}>
-
-      {/* Notification */}
-      {notif && (
-        <div style={{ position:"fixed", top:20, right:20, zIndex:9999, background:notif.type==="error"?"#EF4444":"#10B981", color:"white", padding:"11px 20px", borderRadius:10, fontSize:14, fontWeight:500, boxShadow:"0 8px 32px rgba(0,0,0,0.35)", animation:"slideIn 0.3s ease" }}>
-          {notif.type==="error"?"⚠️":"✓"} {notif.msg}
-        </div>
-      )}
-
-      {/* Top Nav */}
-      <div style={{ borderBottom:"1px solid #1E293B", background:"#0A1120", position:"sticky", top:0, zIndex:100 }}>
-        <div style={{ maxWidth:1280, margin:"0 auto", padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between", height:62 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-            <div style={{ width:34, height:34, borderRadius:9, background:"linear-gradient(135deg,#3B82F6,#8B5CF6)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:17 }}>🚘</div>
-            <div>
-              <div style={{ fontSize:15, fontWeight:700, color:"#F8FAFC", letterSpacing:"-0.3px" }}>FleetDesk</div>
-              <div style={{ fontSize:10, color:"#475569", letterSpacing:"0.5px", textTransform:"uppercase" }}>Corporate Transport</div>
-            </div>
-          </div>
-          <div style={{ display:"flex", gap:4, background:"#1E293B", borderRadius:10, padding:4 }}>
-            {[["employee","👤 Request Ride"],["admin","🛡️ Admin"]].map(([v,label])=>(
-              <button key={v} onClick={()=>setView(v)} style={{ padding:"7px 16px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13, fontWeight:600, background:view===v?"#3B82F6":"transparent", color:view===v?"white":"#94A3B8", transition:"all 0.2s" }}>{label}</button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ EMPLOYEE VIEW ═══ */}
-      {view==="employee" && (
-        <div style={{ maxWidth:680, margin:"0 auto", padding:"40px 24px" }}>
-          {!submitted ? (
-            <>
-              <div style={{ marginBottom:28 }}>
-                <h1 style={{ fontSize:27, fontWeight:700, color:"#F8FAFC", margin:0 }}>Request a Ride</h1>
-                <p style={{ color:"#64748B", marginTop:5, fontSize:14 }}>Submit your transport request and our team will assign a driver.</p>
-              </div>
-              <Card>
-                <SL>Your Information</SL>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:22 }}>
-                  <Field label="Full Name *" value={form.employee} onChange={v=>setForm({...form,employee:v})} placeholder="e.g. Ahmed Al-Sayed" />
-                  <Field label="Department" value={form.department} onChange={v=>setForm({...form,department:v})}>
-                    <select value={form.department} onChange={e=>setForm({...form,department:e.target.value})} style={IS}>
-                      <option value="">Select department...</option>
-                      {departments.map(d=><option key={d} value={d}>{d}</option>)}
-                    </select>
-                  </Field>
-                </div>
-
-                <SL>Ride Type *</SL>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:9, marginBottom:22 }}>
-                  {rideTypes.map(rt=>(
-                    <button key={rt.id} onClick={()=>setForm({...form,type:rt.id})} style={{ padding:"13px 8px", borderRadius:10, border:`2px solid ${form.type===rt.id?rt.color:"#1E293B"}`, background:form.type===rt.id?`${rt.color}18`:"#1E293B", cursor:"pointer", transition:"all 0.18s", textAlign:"center" }}>
-                      <div style={{ fontSize:20, marginBottom:4 }}>{rt.icon}</div>
-                      <div style={{ fontSize:11, fontWeight:600, color:form.type===rt.id?rt.color:"#94A3B8" }}>{rt.label}</div>
-                    </button>
-                  ))}
-                </div>
-
-                <SL>Route Details</SL>
-                <div style={{ display:"grid", gap:14, marginBottom:22 }}>
-                  <Field label="Pickup Location *" value={form.pickup} onChange={v=>setForm({...form,pickup:v})}>
-                    <input list="pickup-list" value={form.pickup} onChange={e=>setForm({...form,pickup:e.target.value})} placeholder="Type or select..." style={IS} />
-                    <datalist id="pickup-list">{destinations.map(d=><option key={d.id} value={d.name}/>)}</datalist>
-                  </Field>
-                  <Field label="Destination *" value={form.destination} onChange={v=>setForm({...form,destination:v})}>
-                    <input list="dest-list" value={form.destination} onChange={e=>setForm({...form,destination:e.target.value})} placeholder="Type or select..." style={IS} />
-                    <datalist id="dest-list">{destinations.map(d=><option key={d.id} value={d.name}/>)}</datalist>
-                  </Field>
-                </div>
-
-                <SL>Schedule</SL>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:14, marginBottom:22 }}>
-                  <Field label="Date *" type="date" value={form.date} onChange={v=>setForm({...form,date:v})} />
-                  <Field label="Time *" type="time" value={form.time} onChange={v=>setForm({...form,time:v})} />
-                  <Field label="Passengers">
-                    <select value={form.passengers} onChange={e=>setForm({...form,passengers:e.target.value})} style={IS}>
-                      {[1,2,3,4,5,6].map(n=><option key={n} value={n}>{n}</option>)}
-                    </select>
-                  </Field>
-                </div>
-
-                <SL>Notes</SL>
-                <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} placeholder="Special requirements, return trip, luggage..." rows={3} style={{ ...IS, resize:"vertical", marginBottom:24 }} />
-
-                <button onClick={handleSubmit} style={{ width:"100%", padding:15, borderRadius:12, border:"none", cursor:"pointer", background:"linear-gradient(135deg,#3B82F6,#8B5CF6)", color:"white", fontSize:15, fontWeight:700, boxShadow:"0 4px 24px rgba(59,130,246,0.35)" }}>
-                  Submit Ride Request →
-                </button>
-              </Card>
-            </>
-          ) : (
-            <Card style={{ textAlign:"center", padding:"56px 40px" }}>
-              <div style={{ fontSize:58, marginBottom:14 }}>✅</div>
-              <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:"0 0 8px" }}>Request Submitted!</h2>
-              <p style={{ color:"#64748B", marginBottom:8, fontSize:14 }}>Your request ID</p>
-              <div style={{ display:"inline-block", background:"#0F172A", padding:"10px 28px", borderRadius:10, fontFamily:"monospace", fontSize:22, fontWeight:700, color:"#3B82F6", marginBottom:22 }}>{newReqId}</div>
-              <p style={{ color:"#64748B", fontSize:13, marginBottom:28 }}>The transport admin will assign a driver shortly.</p>
-              <button onClick={handleReset} style={{ padding:"11px 28px", borderRadius:10, border:"2px solid #3B82F6", background:"transparent", color:"#3B82F6", fontSize:14, fontWeight:600, cursor:"pointer" }}>Submit Another</button>
-            </Card>
-          )}
-        </div>
-      )}
-
-      {/* ═══ ADMIN VIEW ═══ */}
-      {view==="admin" && (
-        <div style={{ display:"flex", minHeight:"calc(100vh - 62px)" }}>
-
-          {/* Sidebar */}
-          <div style={{ width:220, background:"#0A1120", borderRight:"1px solid #1E293B", padding:"20px 12px", flexShrink:0 }}>
-            <div style={{ fontSize:10, fontWeight:700, color:"#334155", letterSpacing:"1px", textTransform:"uppercase", padding:"0 8px", marginBottom:10 }}>Management</div>
-            {NAV_TABS.map(t=>(
-              <button key={t.id} onClick={()=>setAdminTab(t.id)} style={{ width:"100%", display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:10, border:"none", cursor:"pointer", background:adminTab===t.id?"#1E293B":"transparent", color:adminTab===t.id?"#F8FAFC":"#64748B", fontSize:14, fontWeight:adminTab===t.id?600:400, marginBottom:3, textAlign:"left", transition:"all 0.15s" }}>
-                <span style={{ fontSize:16 }}>{t.icon}</span>{t.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Main content */}
-          <div style={{ flex:1, padding:"28px 28px", overflowY:"auto" }}>
-
-            {/* ── DASHBOARD TAB ── */}
-            {adminTab==="dashboard" && (
-              <div>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:24, flexWrap:"wrap", gap:12 }}>
-                  <div>
-                    <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:0 }}>Live Requests</h2>
-                    <p style={{ color:"#64748B", fontSize:13, marginTop:3 }}>Manage and assign drivers to transport requests</p>
-                  </div>
-                  <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-                    {Object.entries({all:"All",pending:"Pending",assigned:"Assigned",inprogress:"In Progress"}).map(([k,label])=>(
-                      <button key={k} onClick={()=>setFilter(k)} style={{ padding:"7px 13px", borderRadius:8, border:"none", cursor:"pointer", fontSize:12, fontWeight:600, background:filterStatus===k?"#3B82F6":"#1E293B", color:filterStatus===k?"white":"#64748B" }}>
-                        {label}{k!=="all"&&stats[k]>0&&<span style={{ marginLeft:5, background:filterStatus===k?"rgba(255,255,255,0.3)":"#334155", borderRadius:20, padding:"1px 7px", fontSize:10 }}>{stats[k]}</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14, marginBottom:24 }}>
-                  {[{label:"Total",value:stats.total,icon:"📋",c:"#3B82F6"},{label:"Pending",value:stats.pending,icon:"⏳",c:"#F59E0B"},{label:"Assigned",value:stats.assigned,icon:"✅",c:"#10B981"},{label:"In Progress",value:stats.inprogress,icon:"🚗",c:"#8B5CF6"}].map(s=>(
-                    <div key={s.label} style={{ background:"#1E293B", borderRadius:12, padding:"18px 20px", border:"1px solid #334155" }}>
-                      <div style={{ fontSize:22, marginBottom:6 }}>{s.icon}</div>
-                      <div style={{ fontSize:26, fontWeight:700, color:s.c }}>{s.value}</div>
-                      <div style={{ fontSize:12, color:"#64748B", marginTop:2 }}>{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Requests */}
-                <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-                  {filteredReqs.length===0&&<div style={{ textAlign:"center", padding:"48px", color:"#475569" }}>No requests.</div>}
-                  {filteredReqs.map(req=>{
-                    const rt = rideTypes.find(r=>r.id===req.type);
-                    const dr = drivers.find(d=>d.id===req.driver);
-                    return (
-                      <div key={req.id} style={{ background:"#1E293B", borderRadius:13, padding:"18px 20px", border:"1px solid #334155" }}>
-                        <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-                          <div style={{ display:"flex", gap:13, alignItems:"flex-start" }}>
-                            <div style={{ width:42, height:42, borderRadius:11, background:`${rt?.color||"#3B82F6"}18`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, flexShrink:0 }}>{rt?.icon||"🚗"}</div>
-                            <div>
-                              <div style={{ display:"flex", gap:8, alignItems:"center", marginBottom:5, flexWrap:"wrap" }}>
-                                <span style={{ fontFamily:"monospace", fontSize:11, color:"#475569" }}>{req.id}</span>
-                                <span style={{ fontSize:13, fontWeight:700, color:"#F8FAFC" }}>{req.employee}</span>
-                                {req.department&&<span style={{ fontSize:11, color:"#64748B", background:"#0F172A", padding:"2px 8px", borderRadius:6 }}>{req.department}</span>}
-                                <Badge status={req.status} />
-                              </div>
-                              <div style={{ fontSize:13, color:"#94A3B8", marginBottom:4 }}>
-                                <span style={{ color:"#475569" }}>From:</span> {req.pickup} <span style={{ margin:"0 6px", color:"#334155" }}>→</span> <span style={{ color:"#475569" }}>To:</span> {req.destination}
-                              </div>
-                              <div style={{ fontSize:12, color:"#64748B", display:"flex", gap:14, flexWrap:"wrap" }}>
-                                <span>📅 {req.date} {req.time}</span>
-                                <span>👥 {req.passengers}</span>
-                                {dr&&<span style={{ color:"#10B981" }}>🚘 {dr.name}</span>}
-                                <span>{timeAgo(req.submittedAt)}</span>
-                              </div>
-                              {req.notes&&<div style={{ marginTop:5, fontSize:12, color:"#64748B", fontStyle:"italic" }}>"{req.notes}"</div>}
-                            </div>
-                          </div>
-                          <div style={{ display:"flex", gap:8, flexShrink:0 }}>
-                            <select value={req.status} onChange={e=>handleStatusChange(req.id,e.target.value)} style={{ ...IS, fontSize:12, padding:"7px 10px", width:"auto", cursor:"pointer" }}>
-                              <option value="pending">Pending</option>
-                              <option value="assigned">Assigned</option>
-                              <option value="inprogress">In Progress</option>
-                              <option value="completed">Completed</option>
-                            </select>
-                            <Btn onClick={()=>{setSelectedReq(req);setAiText(null);}}>Assign Driver</Btn>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* ── DRIVERS TAB ── */}
-            {adminTab==="drivers" && (
-              <div>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22 }}>
-                  <div>
-                    <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:0 }}>Drivers</h2>
-                    <p style={{ color:"#64748B", fontSize:13, marginTop:3 }}>{drivers.length} drivers registered</p>
-                  </div>
-                  <Btn onClick={()=>setModal({type:"driver",data:{name:"",phone:"",email:"",vehicle:"",color:"",plate:"",available:true}})}>+ Add Driver</Btn>
-                </div>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(320px,1fr))", gap:14 }}>
-                  {drivers.map(d=>(
-                    <Card key={d.id} style={{ padding:20 }}>
-                      <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:14 }}>
-                        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-                          <div style={{ width:46, height:46, borderRadius:"50%", background:d.available?"#065F46":"#450A0A", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:700, color:d.available?"#10B981":"#EF4444", flexShrink:0 }}>{d.avatar||initials(d.name)}</div>
-                          <div>
-                            <div style={{ fontSize:15, fontWeight:700, color:"#F8FAFC" }}>{d.name}</div>
-                            <div style={{ fontSize:12, color:d.available?"#10B981":"#EF4444" }}>{d.available?"● Available":"● Busy"}</div>
-                          </div>
-                        </div>
-                        <div style={{ display:"flex", gap:6" }}>
-                          <button onClick={()=>setModal({type:"driver",data:{...d}})} style={{ padding:"5px 10px", borderRadius:7, border:"1px solid #334155", background:"transparent", color:"#94A3B8", fontSize:12, cursor:"pointer" }}>Edit</button>
-                          <button onClick={()=>deleteDriver(d.id)} style={{ padding:"5px 10px", borderRadius:7, border:"1px solid #450A0A", background:"transparent", color:"#EF4444", fontSize:12, cursor:"pointer" }}>✕</button>
-                        </div>
-                      </div>
-                      <div style={{ fontSize:13, color:"#64748B", display:"flex", flexDirection:"column", gap:5 }}>
-                        <span>🚗 {d.vehicle} · {d.color} · <span style={{ fontFamily:"monospace" }}>{d.plate}</span></span>
-                        <span>📞 {d.phone}</span>
-                        {d.email&&<span>✉️ {d.email}</span>}
-                      </div>
-                      <div style={{ marginTop:14, paddingTop:14, borderTop:"1px solid #334155", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                        <span style={{ fontSize:12, color:"#64748B" }}>Toggle availability</span>
-                        <div onClick={()=>toggleAvail(d.id)} style={{ width:42, height:22, borderRadius:11, background:d.available?"#10B981":"#334155", cursor:"pointer", position:"relative", transition:"background 0.2s" }}>
-                          <div style={{ width:18, height:18, borderRadius:"50%", background:"white", position:"absolute", top:2, left:d.available?22:2, transition:"left 0.2s" }}></div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ── DESTINATIONS TAB ── */}
-            {adminTab==="destinations" && (
-              <div>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22 }}>
-                  <div>
-                    <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:0 }}>Destinations</h2>
-                    <p style={{ color:"#64748B", fontSize:13, marginTop:3 }}>Pre-set locations shown to employees as suggestions</p>
-                  </div>
-                  <Btn onClick={()=>setModal({type:"dest",data:{name:"",category:"Office",address:""}})}>+ Add Destination</Btn>
-                </div>
-                <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-                  {destinations.map(d=>{
-                    const catColors = {Airport:"#3B82F6",Medical:"#EF4444",Office:"#8B5CF6",Hotel:"#10B981",Courier:"#F59E0B"};
-                    const c = catColors[d.category]||"#6B7280";
-                    return (
-                      <div key={d.id} style={{ background:"#1E293B", borderRadius:12, padding:"16px 20px", border:"1px solid #334155", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
-                        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-                          <div style={{ width:36, height:36, borderRadius:9, background:`${c}18`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:16 }}>📍</div>
-                          <div>
-                            <div style={{ fontSize:14, fontWeight:600, color:"#F8FAFC" }}>{d.name}</div>
-                            <div style={{ fontSize:12, color:"#64748B", marginTop:2 }}>{d.address}</div>
-                          </div>
-                        </div>
-                        <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-                          <span style={{ fontSize:11, background:`${c}18`, color:c, padding:"3px 10px", borderRadius:20, fontWeight:600 }}>{d.category}</span>
-                          <button onClick={()=>setModal({type:"dest",data:{...d}})} style={{ padding:"5px 12px", borderRadius:7, border:"1px solid #334155", background:"transparent", color:"#94A3B8", fontSize:12, cursor:"pointer" }}>Edit</button>
-                          <button onClick={()=>deleteDest(d.id)} style={{ padding:"5px 12px", borderRadius:7, border:"1px solid #450A0A", background:"transparent", color:"#EF4444", fontSize:12, cursor:"pointer" }}>Remove</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* ── DEPARTMENTS TAB ── */}
-            {adminTab==="departments" && (
-              <DepartmentsTab departments={departments} setDepartments={setDepartments} notify={notify} />
-            )}
-
-            {/* ── RIDE TYPES TAB ── */}
-            {adminTab==="ridetypes" && (
-              <RideTypesTab rideTypes={rideTypes} setRideTypes={setRideTypes} notify={notify} />
-            )}
-
-          </div>
-        </div>
-      )}
-
-      {/* ═══ ASSIGN DRIVER MODAL ═══ */}
-      {selectedReq && (
-        <Modal title="Assign Driver" subtitle={`${selectedReq.id} · ${selectedReq.employee} · ${rideTypes.find(r=>r.id===selectedReq.type)?.label}`} onClose={()=>setSelectedReq(null)}>
-          <button onClick={()=>getAiSuggestion(selectedReq)} style={{ width:"100%", padding:11, borderRadius:10, border:"1px dashed #4F46E5", background:"#1E1B4B", color:"#818CF8", fontSize:13, fontWeight:600, cursor:"pointer", marginBottom:12 }}>
-            {aiLoading?"⏳ Getting AI Suggestion...":"✨ Get AI Driver Suggestion"}
-          </button>
-          {aiText&&<div style={{ background:"#0F172A", border:"1px solid #312E81", borderRadius:10, padding:"12px 16px", marginBottom:16, fontSize:13, color:"#C7D2FE", lineHeight:1.6 }}><span style={{ color:"#818CF8", fontWeight:700 }}>AI: </span>{aiText}</div>}
-          <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
-            {drivers.map(d=>(
-              <button key={d.id} onClick={()=>d.available&&handleAssign(selectedReq.id,d.id)} style={{ display:"flex", alignItems:"center", gap:12, padding:"13px 15px", borderRadius:11, border:`2px solid ${selectedReq.driver===d.id?"#3B82F6":d.available?"#334155":"#1E293B"}`, background:selectedReq.driver===d.id?"#1E3A5F":"#0F172A", cursor:d.available?"pointer":"not-allowed", opacity:d.available?1:0.5, textAlign:"left" }}>
-                <div style={{ width:38, height:38, borderRadius:"50%", background:d.available?"#065F46":"#450A0A", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, color:d.available?"#10B981":"#EF4444" }}>{d.avatar||initials(d.name)}</div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:14, fontWeight:600, color:"#F8FAFC" }}>{d.name}</div>
-                  <div style={{ fontSize:12, color:"#64748B" }}>{d.vehicle} · {d.plate}</div>
-                  <div style={{ fontSize:11, color:d.available?"#10B981":"#EF4444", marginTop:2 }}>{d.available?"● Available":"● Busy"}</div>
-                </div>
-                {selectedReq.driver===d.id&&<span style={{ fontSize:18 }}>✓</span>}
-              </button>
-            ))}
-          </div>
-          <Btn variant="ghost" onClick={()=>setSelectedReq(null)} style={{ width:"100%", marginTop:14 }}>Cancel</Btn>
-        </Modal>
-      )}
-
-      {/* ═══ DRIVER EDIT/ADD MODAL ═══ */}
-      {modal?.type==="driver" && (
-        <DriverModal data={modal.data} onSave={saveDriver} onClose={()=>setModal(null)} />
-      )}
-
-      {/* ═══ DESTINATION EDIT/ADD MODAL ═══ */}
-      {modal?.type==="dest" && (
-        <DestModal data={modal.data} onSave={saveDest} onClose={()=>setModal(null)} />
-      )}
-
-    </div>
-  );
+// ═══════════════════════════════════════════
+// EMPLOYEE FORM
+// ═══════════════════════════════════════════
+function buildForm(){
+  // Departments
+  var sel=document.getElementById("f-dept");
+  sel.innerHTML='<option value="">Select department...</option>';
+  departments.forEach(function(d){sel.innerHTML+='<option value="'+escHtml(d)+'">'+escHtml(d)+'</option>'});
+  // Ride types
+  var grid=document.getElementById("ride-type-grid");
+  grid.innerHTML="";
+  rideTypes.forEach(function(rt){
+    var btn=document.createElement("button");
+    btn.className="ride-btn";
+    btn.id="rt-"+rt.id;
+    btn.innerHTML='<div style="font-size:20px;margin-bottom:4px">'+rt.icon+'</div><div style="font-size:11px;font-weight:600;color:#94A3B8">'+escHtml(rt.label)+'</div>';
+    btn.onclick=function(){selectType(rt.id)};
+    grid.appendChild(btn);
+  });
+  // Datalists
+  var pl=document.getElementById("pickup-list"), dl=document.getElementById("dest-list");
+  pl.innerHTML=""; dl.innerHTML="";
+  destinations.forEach(function(d){
+    pl.innerHTML+='<option value="'+escHtml(d.name)+'">';
+    dl.innerHTML+='<option value="'+escHtml(d.name)+'">';
+  });
+}
+function selectType(id){
+  selectedType=id;
+  rideTypes.forEach(function(rt){
+    var btn=document.getElementById("rt-"+rt.id);
+    if(!btn) return;
+    if(rt.id===id){
+      btn.style.borderColor=rt.color;
+      btn.style.background=rt.color+"28";
+      btn.querySelector("div:last-child").style.color=rt.color;
+    } else {
+      btn.style.borderColor="#1E293B";
+      btn.style.background="#1E293B";
+      btn.querySelector("div:last-child").style.color="#94A3B8";
+    }
+  });
+}
+function submitRequest(){
+  var name=document.getElementById("f-name").value.trim();
+  var dept=document.getElementById("f-dept").value;
+  var pickup=document.getElementById("f-pickup").value.trim();
+  var dest=document.getElementById("f-dest").value.trim();
+  var date=document.getElementById("f-date").value;
+  var time=document.getElementById("f-time").value;
+  if(!name||!selectedType||!pickup||!dest||!date||!time){notify("Please fill all required fields.","error");return}
+  var id=genId();
+  requests.unshift({id:id,employee:name,department:dept,type:selectedType,pickup:pickup,destination:dest,date:date,time:time,notes:document.getElementById("f-notes").value,passengers:parseInt(document.getElementById("f-pass").value),status:"pending",driver:null,submittedAt:new Date().toISOString()});
+  document.getElementById("success-id").textContent=id;
+  document.getElementById("form-section").style.display="none";
+  document.getElementById("success-section").style.display="block";
+}
+function resetForm(){
+  document.getElementById("f-name").value="";
+  document.getElementById("f-dept").value="";
+  document.getElementById("f-pickup").value="";
+  document.getElementById("f-dest").value="";
+  document.getElementById("f-date").value="";
+  document.getElementById("f-time").value="";
+  document.getElementById("f-notes").value="";
+  document.getElementById("f-pass").value="1";
+  selectedType="";
+  rideTypes.forEach(function(rt){var btn=document.getElementById("rt-"+rt.id);if(btn){btn.style.borderColor="#1E293B";btn.style.background="#1E293B";btn.querySelector("div:last-child").style.color="#94A3B8"}});
+  document.getElementById("form-section").style.display="block";
+  document.getElementById("success-section").style.display="none";
 }
 
-// ── Driver Modal ──────────────────────────────────────────────
-function DriverModal({ data, onSave, onClose }) {
-  const [f, setF] = useState({ name:"", phone:"", email:"", vehicle:"", color:"", plate:"", available:true, ...data });
-  return (
-    <Modal title={data.id?"Edit Driver":"Add New Driver"} onClose={onClose}>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:14 }}>
-        <Field label="Full Name *" value={f.name} onChange={v=>setF({...f,name:v})} placeholder="Driver's full name" />
-        <Field label="Phone *" value={f.phone} onChange={v=>setF({...f,phone:v})} placeholder="+966 50 000 0000" />
-        <Field label="Email" value={f.email} onChange={v=>setF({...f,email:v})} placeholder="driver@company.com" />
-        <Field label="Vehicle Model *" value={f.vehicle} onChange={v=>setF({...f,vehicle:v})} placeholder="Toyota Camry" />
-        <Field label="Vehicle Color" value={f.color} onChange={v=>setF({...f,color:v})} placeholder="White" />
-        <Field label="Plate Number *" value={f.plate} onChange={v=>setF({...f,plate:v})} placeholder="KSA-1234" />
-      </div>
-      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:20 }}>
-        <div onClick={()=>setF({...f,available:!f.available})} style={{ width:42, height:22, borderRadius:11, background:f.available?"#10B981":"#334155", cursor:"pointer", position:"relative", transition:"background 0.2s" }}>
-          <div style={{ width:18, height:18, borderRadius:"50%", background:"white", position:"absolute", top:2, left:f.available?22:2, transition:"left 0.2s" }}></div>
-        </div>
-        <span style={{ fontSize:13, color:"#94A3B8" }}>Available for assignment</span>
-      </div>
-      <div style={{ display:"flex", gap:10" }}>
-        <Btn onClick={()=>onSave({...f,avatar:initials(f.name)})} style={{ flex:1 }}>{data.id?"Save Changes":"Add Driver"}</Btn>
-        <Btn variant="ghost" onClick={onClose}>Cancel</Btn>
-      </div>
-    </Modal>
-  );
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard(){
+  var filtered=filterStatus==="all"?requests:requests.filter(function(r){return r.status===filterStatus});
+  var stats={total:requests.length,pending:requests.filter(function(r){return r.status==="pending"}).length,assigned:requests.filter(function(r){return r.status==="assigned"}).length,inprogress:requests.filter(function(r){return r.status==="inprogress"}).length};
+  var filters=["all","pending","assigned","inprogress"];
+  var filterLabels={all:"All",pending:"Pending",assigned:"Assigned",inprogress:"In Progress"};
+  var filterBtns=filters.map(function(f){
+    var active=f===filterStatus;
+    var badge=(f!=="all"&&stats[f]>0)?'<span style="margin-left:5px;background:'+(active?"rgba(255,255,255,.3)":"#334155")+';border-radius:20px;padding:1px 7px;font-size:10px">'+stats[f]+'</span>':"";
+    return '<button onclick="setFilter(\''+f+'\')" style="padding:7px 13px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:\'DM Sans\',sans-serif;background:'+(active?"#3B82F6":"#1E293B")+';color:'+(active?"white":"#64748B")+'">'+filterLabels[f]+badge+'</button>';
+  }).join("");
+  var statsHtml=['<div class="stat-card"><div style="font-size:22px;margin-bottom:6px">📋</div><div style="font-size:26px;font-weight:700;color:#3B82F6">'+stats.total+'</div><div style="font-size:12px;color:#64748B">Total</div></div>','<div class="stat-card"><div style="font-size:22px;margin-bottom:6px">⏳</div><div style="font-size:26px;font-weight:700;color:#F59E0B">'+stats.pending+'</div><div style="font-size:12px;color:#64748B">Pending</div></div>','<div class="stat-card"><div style="font-size:22px;margin-bottom:6px">✅</div><div style="font-size:26px;font-weight:700;color:#10B981">'+stats.assigned+'</div><div style="font-size:12px;color:#64748B">Assigned</div></div>','<div class="stat-card"><div style="font-size:22px;margin-bottom:6px">🚗</div><div style="font-size:26px;font-weight:700;color:#8B5CF6">'+stats.inprogress+'</div><div style="font-size:12px;color:#64748B">In Progress</div></div>'].join("");
+  var reqsHtml=filtered.length===0?'<div style="text-align:center;padding:48px;color:#475569">No requests.</div>':filtered.map(function(req){
+    var rt=rideTypes.find(function(r){return r.id===req.type})||{icon:"🚗",color:"#6B7280",label:"Ride"};
+    var dr=drivers.find(function(d){return d.id===req.driver});
+    var sc=statusCfg(req.status);
+    var drHtml=dr?'<span style="color:#10B981">🚘 '+escHtml(dr.name)+'</span>':"";
+    var statusOpts=["pending","assigned","inprogress","completed"].map(function(s){return'<option value="'+s+'"'+(req.status===s?" selected":"")+'>'+statusCfg(s).label+'</option>'}).join("");
+    return '<div class="req-row"><div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px"><div style="display:flex;gap:13px;align-items:flex-start"><div style="width:42px;height:42px;border-radius:11px;background:'+rt.color+'28;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+rt.icon+'</div><div><div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;flex-wrap:wrap"><span style="font-family:\'DM Mono\',monospace;font-size:11px;color:#475569">'+escHtml(req.id)+'</span><span style="font-size:13px;font-weight:700;color:#F8FAFC">'+escHtml(req.employee)+'</span>'+(req.department?'<span style="font-size:11px;color:#64748B;background:#0F172A;padding:2px 8px;border-radius:6px">'+escHtml(req.department)+'</span>':'')+'<span class="tag" style="background:'+sc.bg+';color:'+sc.color+'"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+sc.dot+';margin-right:5px"></span>'+sc.label+'</span></div><div style="font-size:13px;color:#94A3B8;margin-bottom:4px"><span style="color:#475569">From:</span> '+escHtml(req.pickup)+' <span style="margin:0 6px;color:#334155">→</span> <span style="color:#475569">To:</span> '+escHtml(req.destination)+'</div><div style="font-size:12px;color:#64748B;display:flex;gap:14px;flex-wrap:wrap"><span>📅 '+escHtml(req.date)+' '+escHtml(req.time)+'</span><span>👥 '+req.passengers+'</span>'+drHtml+'<span>'+timeAgo(req.submittedAt)+'</span></div>'+(req.notes?'<div style="margin-top:5px;font-size:12px;color:#64748B;font-style:italic">"'+escHtml(req.notes)+'"</div>':'')+'</div></div><div style="display:flex;gap:8px;flex-shrink:0"><select class="status-sel" onchange="changeStatus(\''+req.id+'\',this.value)">'+statusOpts+'</select><button class="btn-primary" onclick="openAssign(\''+req.id+'\')" style="font-size:12px;padding:7px 14px">Assign Driver</button></div></div></div>';
+  }).join("");
+  document.getElementById("atab-dashboard").innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px"><div><h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0">Live Requests</h2><p style="color:#64748B;font-size:13px;margin-top:3px">Manage and assign drivers</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+filterBtns+'</div></div><div class="grid4" style="margin-bottom:24px">'+statsHtml+'</div>'+reqsHtml;
+}
+function setFilter(f){filterStatus=f;renderDashboard()}
+function changeStatus(id,s){var r=requests.find(function(x){return x.id===id});if(r){r.status=s;renderDashboard()}}
+
+// ═══════════════════════════════════════════
+// ASSIGN DRIVER MODAL
+// ═══════════════════════════════════════════
+function openAssign(reqId){
+  var req=requests.find(function(r){return r.id===reqId});
+  if(!req) return;
+  var rt=rideTypes.find(function(r){return r.id===req.type})||{label:"Ride"};
+  var driversList=drivers.map(function(d){
+    var av=d.available;
+    var sel=req.driver===d.id;
+    return '<button onclick="assignDriver(\''+reqId+'\','+d.id+')" style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:11px;border:2px solid '+(sel?"#3B82F6":av?"#334155":"#1E293B")+';background:'+(sel?"#1E3A5F":"#0F172A")+';cursor:'+(av?"pointer":"not-allowed")+';opacity:'+(av?1:.45)+';text-align:left;width:100%;font-family:\'DM Sans\',sans-serif;margin-bottom:9px"><div style="width:38px;height:38px;border-radius:50%;background:'+(av?"#065F46":"#450A0A")+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:'+(av?"#10B981":"#EF4444")+';flex-shrink:0">'+initials(d.name)+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:#F8FAFC">'+escHtml(d.name)+'</div><div style="font-size:12px;color:#64748B">'+escHtml(d.vehicle)+' · '+escHtml(d.plate)+'</div><div style="font-size:11px;color:'+(av?"#10B981":"#EF4444")+';margin-top:2px">'+(av?"● Available":"● Busy")+'</div></div>'+(sel?'<span style="font-size:18px">✓</span>':"")+'</button>';
+  }).join("");
+  document.getElementById("modal-content").innerHTML='<div style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:5px">Assign Driver</div><div style="font-size:13px;color:#64748B;margin-bottom:18px">'+escHtml(req.id)+' · '+escHtml(req.employee)+' · '+escHtml(rt.label)+'</div><button onclick="getAiSuggestion(\''+reqId+'\')" id="ai-btn" style="width:100%;padding:11px;border-radius:10px;border:1px dashed #4F46E5;background:#1E1B4B;color:#818CF8;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;font-family:\'DM Sans\',sans-serif">✨ Get AI Driver Suggestion</button><div id="ai-result" style="display:none;background:#0F172A;border:1px solid #312E81;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#C7D2FE;line-height:1.6"></div>'+driversList+'<button class="btn-ghost" onclick="closeModal()" style="width:100%;margin-top:8px">Cancel</button>';
+  document.getElementById("modal").style.display="flex";
+}
+function assignDriver(reqId,driverId){
+  var r=requests.find(function(x){return x.id===reqId});
+  var d=drivers.find(function(x){return x.id===driverId});
+  if(r&&d&&d.available){r.driver=driverId;r.status="assigned";notify("Assigned to "+d.name);closeModal();renderDashboard()}
+}
+async function getAiSuggestion(reqId){
+  var req=requests.find(function(r){return r.id===reqId});
+  if(!req) return;
+  document.getElementById("ai-btn").textContent="⏳ Getting AI Suggestion...";
+  document.getElementById("ai-btn").disabled=true;
+  try{
+    var avDrivers=drivers.filter(function(d){return d.available}).map(function(d){return d.name+" ("+d.vehicle+")"}).join(", ");
+    var resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,messages:[{role:"user",content:"Fleet coordinator: suggest best driver.\nEmployee: "+req.employee+" ("+req.department+")\nType: "+req.type+"\nFrom: "+req.pickup+" → To: "+req.destination+"\nDate/Time: "+req.date+" "+req.time+"\nPassengers: "+req.passengers+"\nNotes: "+(req.notes||"none")+"\nAvailable drivers: "+avDrivers+"\nRecommend one driver by name, 2-3 sentences."}]})});
+    var data=await resp.json();
+    var txt=data.content&&data.content[0]?data.content[0].text:"No suggestion.";
+    var el=document.getElementById("ai-result");
+    el.innerHTML='<span style="color:#818CF8;font-weight:700">AI: </span>'+escHtml(txt);
+    el.style.display="block";
+  }catch(e){var el=document.getElementById("ai-result");el.innerHTML='<span style="color:#EF4444">Could not get AI suggestion.</span>';el.style.display="block"}
+  document.getElementById("ai-btn").textContent="✨ Get AI Driver Suggestion";
+  document.getElementById("ai-btn").disabled=false;
 }
 
-// ── Destination Modal ─────────────────────────────────────────
-function DestModal({ data, onSave, onClose }) {
-  const [f, setF] = useState({ name:"", category:"Office", address:"", ...data });
-  const cats = ["Airport","Medical","Office","Hotel","Courier","Other"];
-  return (
-    <Modal title={data.id?"Edit Destination":"Add Destination"} onClose={onClose}>
-      <div style={{ display:"flex", flexDirection:"column", gap:14, marginBottom:20 }}>
-        <Field label="Location Name *" value={f.name} onChange={v=>setF({...f,name:v})} placeholder="e.g. King Fahd Airport" />
-        <Field label="Category">
-          <select value={f.category} onChange={e=>setF({...f,category:e.target.value})} style={IS}>
-            {cats.map(c=><option key={c} value={c}>{c}</option>)}
-          </select>
-        </Field>
-        <Field label="Address" value={f.address} onChange={v=>setF({...f,address:v})} placeholder="Street, City" />
-      </div>
-      <div style={{ display:"flex", gap:10 }}>
-        <Btn onClick={()=>onSave(f)} style={{ flex:1 }}>{data.id?"Save Changes":"Add Destination"}</Btn>
-        <Btn variant="ghost" onClick={onClose}>Cancel</Btn>
-      </div>
-    </Modal>
-  );
+// ═══════════════════════════════════════════
+// DRIVERS TAB
+// ═══════════════════════════════════════════
+function renderDrivers(){
+  var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px"><div><h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0">Drivers</h2><p style="color:#64748B;font-size:13px;margin-top:3px">'+drivers.length+' drivers registered</p></div><button class="btn-primary" onclick="openDriverModal(null)">+ Add Driver</button></div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">';
+  drivers.forEach(function(d){
+    html+='<div class="driver-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px"><div style="display:flex;gap:12px;align-items:center"><div style="width:46px;height:46px;border-radius:50%;background:'+(d.available?"#065F46":"#450A0A")+';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:'+(d.available?"#10B981":"#EF4444")+';flex-shrink:0">'+initials(d.name)+'</div><div><div style="font-size:15px;font-weight:700;color:#F8FAFC">'+escHtml(d.name)+'</div><div style="font-size:12px;color:'+(d.available?"#10B981":"#EF4444")+'">'+(d.available?"● Available":"● Busy")+'</div></div></div><div style="display:flex;gap:6px"><button class="btn-edit" onclick="openDriverModal('+d.id+')">Edit</button><button class="btn-danger" onclick="deleteDriver('+d.id+')">✕</button></div></div><div style="font-size:13px;color:#64748B;display:flex;flex-direction:column;gap:5px"><span>🚗 '+escHtml(d.vehicle)+' · '+escHtml(d.color)+' · <span style="font-family:\'DM Mono\',monospace">'+escHtml(d.plate)+'</span></span><span>📞 '+escHtml(d.phone)+'</span>'+(d.email?'<span>✉️ '+escHtml(d.email)+'</span>':"")+'</div><div style="margin-top:14px;padding-top:14px;border-top:1px solid #334155;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#64748B">Toggle availability</span><div class="toggle" style="background:'+(d.available?"#10B981":"#334155")+'" onclick="toggleAvail('+d.id+')"><div class="toggle-thumb" style="left:'+(d.available?"22px":"2px")+'"></div></div></div></div>';
+  });
+  html+='</div>';
+  document.getElementById("atab-drivers").innerHTML=html;
+}
+function toggleAvail(id){var d=drivers.find(function(x){return x.id===id});if(d){d.available=!d.available;renderDrivers()}}
+function deleteDriver(id){if(confirm("Remove this driver?")){drivers=drivers.filter(function(d){return d.id!==id});renderDrivers();notify("Driver removed","error")}}
+function openDriverModal(id){
+  var d=id?drivers.find(function(x){return x.id===id}):{name:"",phone:"",email:"",vehicle:"",color:"",plate:"",available:true};
+  var title=id?"Edit Driver":"Add New Driver";
+  document.getElementById("modal-content").innerHTML='<div style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:18px">'+title+'</div><div class="grid2" style="gap:14px;margin-bottom:14px"><div><label class="field-label">Full Name *</label><input class="inp" id="dm-name" value="'+escHtml(d.name)+'" placeholder="Driver\'s full name"/></div><div><label class="field-label">Phone *</label><input class="inp" id="dm-phone" value="'+escHtml(d.phone)+'" placeholder="+966 50 000 0000"/></div><div><label class="field-label">Email</label><input class="inp" id="dm-email" value="'+escHtml(d.email||"")+'" placeholder="driver@company.com"/></div><div><label class="field-label">Vehicle Model *</label><input class="inp" id="dm-vehicle" value="'+escHtml(d.vehicle)+'" placeholder="Toyota Camry"/></div><div><label class="field-label">Vehicle Color</label><input class="inp" id="dm-color" value="'+escHtml(d.color||"")+'" placeholder="White"/></div><div><label class="field-label">Plate Number *</label><input class="inp" id="dm-plate" value="'+escHtml(d.plate)+'" placeholder="KSA-1234"/></div></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:20px"><div class="toggle" id="dm-toggle" style="background:'+(d.available?"#10B981":"#334155")+'" onclick="dmToggle()"><div class="toggle-thumb" id="dm-thumb" style="left:'+(d.available?"22px":"2px")+'"></div></div><span style="font-size:13px;color:#94A3B8">Available for assignment</span></div><div style="display:flex;gap:10px"><button class="btn-primary" onclick="saveDriver('+(id||"null")+')" style="flex:1">'+(id?"Save Changes":"Add Driver")+'</button><button class="btn-ghost" onclick="closeModal()">Cancel</button></div>';
+  window._dmAvail=d.available;
+  document.getElementById("modal").style.display="flex";
+}
+function dmToggle(){window._dmAvail=!window._dmAvail;document.getElementById("dm-toggle").style.background=window._dmAvail?"#10B981":"#334155";document.getElementById("dm-thumb").style.left=window._dmAvail?"22px":"2px"}
+function saveDriver(id){
+  var name=document.getElementById("dm-name").value.trim();
+  var phone=document.getElementById("dm-phone").value.trim();
+  var vehicle=document.getElementById("dm-vehicle").value.trim();
+  var plate=document.getElementById("dm-plate").value.trim();
+  if(!name||!phone||!vehicle||!plate){notify("Please fill required fields.","error");return}
+  var obj={name:name,phone:phone,email:document.getElementById("dm-email").value.trim(),vehicle:vehicle,color:document.getElementById("dm-color").value.trim(),plate:plate,available:window._dmAvail};
+  if(id){Object.assign(drivers.find(function(d){return d.id===id}),obj);notify("Driver updated")}
+  else{obj.id=Date.now();drivers.push(obj);notify("Driver added")}
+  closeModal();renderDrivers();
 }
 
-// ── Departments Tab ───────────────────────────────────────────
-function DepartmentsTab({ departments, setDepartments, notify }) {
-  const [newDept, setNewDept] = useState("");
-  const [editing, setEditing] = useState(null);
-  const add = () => {
-    const t = newDept.trim();
-    if (!t||departments.includes(t)) return;
-    setDepartments(p=>[...p,t]); setNewDept(""); notify("Department added");
-  };
-  const remove = (d) => { setDepartments(p=>p.filter(x=>x!==d)); notify("Department removed","error"); };
-  const save = (old, val) => { setDepartments(p=>p.map(x=>x===old?val:x)); setEditing(null); notify("Department updated"); };
-  return (
-    <div>
-      <div style={{ marginBottom:22 }}>
-        <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:0 }}>Departments</h2>
-        <p style={{ color:"#64748B", fontSize:13, marginTop:3 }}>Departments shown in the employee request form</p>
-      </div>
-      <Card style={{ marginBottom:20, padding:16 }}>
-        <div style={{ display:"flex", gap:10 }}>
-          <input value={newDept} onChange={e=>setNewDept(e.target.value)} onKeyDown={e=>e.key==="Enter"&&add()} placeholder="New department name..." style={{ ...IS, flex:1 }} />
-          <Btn onClick={add}>+ Add</Btn>
-        </div>
-      </Card>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:10 }}>
-        {departments.map(d=>(
-          <div key={d} style={{ background:"#1E293B", borderRadius:11, padding:"13px 16px", border:"1px solid #334155", display:"flex", alignItems:"center", justifyContent:"space-between", gap:10 }}>
-            {editing===d ? (
-              <EditInline value={d} onSave={v=>save(d,v)} onCancel={()=>setEditing(null)} />
-            ) : (
-              <>
-                <span style={{ fontSize:14, fontWeight:500, color:"#E2E8F0" }}>🏢 {d}</span>
-                <div style={{ display:"flex", gap:6 }}>
-                  <button onClick={()=>setEditing(d)} style={{ padding:"4px 10px", borderRadius:6, border:"1px solid #334155", background:"transparent", color:"#94A3B8", fontSize:12, cursor:"pointer" }}>Edit</button>
-                  <button onClick={()=>remove(d)} style={{ padding:"4px 10px", borderRadius:6, border:"1px solid #450A0A", background:"transparent", color:"#EF4444", fontSize:12, cursor:"pointer" }}>✕</button>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+// ═══════════════════════════════════════════
+// DESTINATIONS TAB
+// ═══════════════════════════════════════════
+function renderDestinations(){
+  var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px"><div><h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0">Destinations</h2><p style="color:#64748B;font-size:13px;margin-top:3px">Pre-set locations shown as suggestions to employees</p></div><button class="btn-primary" onclick="openDestModal(null)">+ Add Destination</button></div>';
+  destinations.forEach(function(d){
+    var c=catColor(d.category);
+    html+='<div class="dest-row"><div style="display:flex;gap:12px;align-items:center"><div style="width:36px;height:36px;border-radius:9px;background:'+c+'18;display:flex;align-items:center;justify-content:center;font-size:16px">📍</div><div><div style="font-size:14px;font-weight:600;color:#F8FAFC">'+escHtml(d.name)+'</div><div style="font-size:12px;color:#64748B;margin-top:2px">'+escHtml(d.address)+'</div></div></div><div style="display:flex;gap:8px;align-items:center"><span class="tag" style="background:'+c+'18;color:'+c+'">'+escHtml(d.category)+'</span><button class="btn-edit" onclick="openDestModal('+d.id+')">Edit</button><button class="btn-danger" onclick="deleteDest('+d.id+')">Remove</button></div></div>';
+  });
+  document.getElementById("atab-destinations").innerHTML=html;
+}
+function deleteDest(id){if(confirm("Remove this destination?")){destinations=destinations.filter(function(d){return d.id!==id});renderDestinations();notify("Destination removed","error")}}
+function openDestModal(id){
+  var d=id?destinations.find(function(x){return x.id===id}):{name:"",category:"Office",address:""};
+  var cats=["Airport","Medical","Office","Hotel","Courier","Other"];
+  var catOpts=cats.map(function(c){return'<option value="'+c+'"'+(d.category===c?" selected":"")+'>'+c+'</option>'}).join("");
+  document.getElementById("modal-content").innerHTML='<div style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:18px">'+(id?"Edit Destination":"Add Destination")+'</div><div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px"><div><label class="field-label">Location Name *</label><input class="inp" id="dest-name" value="'+escHtml(d.name)+'" placeholder="e.g. King Fahd Airport"/></div><div><label class="field-label">Category</label><select class="inp" id="dest-cat">'+catOpts+'</select></div><div><label class="field-label">Address</label><input class="inp" id="dest-addr" value="'+escHtml(d.address)+'" placeholder="Street, City"/></div></div><div style="display:flex;gap:10px"><button class="btn-primary" onclick="saveDest('+(id||"null")+')" style="flex:1">'+(id?"Save Changes":"Add Destination")+'</button><button class="btn-ghost" onclick="closeModal()">Cancel</button></div>';
+  document.getElementById("modal").style.display="flex";
+}
+function saveDest(id){
+  var name=document.getElementById("dest-name").value.trim();
+  if(!name){notify("Please enter a name.","error");return}
+  var obj={name:name,category:document.getElementById("dest-cat").value,address:document.getElementById("dest-addr").value.trim()};
+  if(id){Object.assign(destinations.find(function(d){return d.id===id}),obj);notify("Destination updated")}
+  else{obj.id=Date.now();destinations.push(obj);notify("Destination added")}
+  closeModal();renderDestinations();buildForm();
 }
 
-// ── Ride Types Tab ────────────────────────────────────────────
-function RideTypesTab({ rideTypes, setRideTypes, notify }) {
-  const [editing, setEditing] = useState(null);
-  const [ef, setEf] = useState({});
-  const startEdit = (rt) => { setEditing(rt.id); setEf({...rt}); };
-  const save = () => { setRideTypes(p=>p.map(r=>r.id===ef.id?ef:r)); setEditing(null); notify("Ride type updated"); };
-  return (
-    <div>
-      <div style={{ marginBottom:22 }}>
-        <h2 style={{ fontSize:22, fontWeight:700, color:"#F8FAFC", margin:0 }}>Ride Types</h2>
-        <p style={{ color:"#64748B", fontSize:13, marginTop:3 }}>Edit labels and icons shown in the employee form</p>
-      </div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:12 }}>
-        {rideTypes.map(rt=>(
-          <Card key={rt.id} style={{ padding:18 }}>
-            {editing===rt.id ? (
-              <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-                  <Field label="Label" value={ef.label} onChange={v=>setEf({...ef,label:v})} />
-                  <Field label="Icon (emoji)" value={ef.icon} onChange={v=>setEf({...ef,icon:v})} placeholder="✈️" />
-                </div>
-                <Field label="Color (hex)" value={ef.color} onChange={v=>setEf({...ef,color:v})} placeholder="#3B82F6" />
-                <div style={{ display:"flex", gap:8 }}>
-                  <Btn onClick={save} style={{ flex:1 }}>Save</Btn>
-                  <Btn variant="ghost" onClick={()=>setEditing(null)}>Cancel</Btn>
-                </div>
-              </div>
-            ) : (
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                  <div style={{ width:44, height:44, borderRadius:11, background:`${rt.color}18`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>{rt.icon}</div>
-                  <div>
-                    <div style={{ fontSize:14, fontWeight:600, color:"#F8FAFC" }}>{rt.label}</div>
-                    <div style={{ fontSize:12, color:"#64748B", fontFamily:"monospace" }}>{rt.color}</div>
-                  </div>
-                </div>
-                <button onClick={()=>startEdit(rt)} style={{ padding:"6px 14px", borderRadius:7, border:"1px solid #334155", background:"transparent", color:"#94A3B8", fontSize:12, cursor:"pointer" }}>Edit</button>
-              </div>
-            )}
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+// ═══════════════════════════════════════════
+// DEPARTMENTS TAB
+// ═══════════════════════════════════════════
+function renderDepartments(){
+  var html='<div style="margin-bottom:22px"><h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0">Departments</h2><p style="color:#64748B;font-size:13px;margin-top:3px">Shown in the employee request form dropdown</p></div><div class="card" style="margin-bottom:20px;padding:16px"><div style="display:flex;gap:10px"><input class="inp" id="new-dept" placeholder="New department name..." style="flex:1" onkeydown="if(event.key===\'Enter\')addDept()"/><button class="btn-primary" onclick="addDept()">+ Add</button></div></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">';
+  departments.forEach(function(d,i){
+    html+='<div class="dept-chip"><span id="dept-text-'+i+'" style="font-size:14px;font-weight:500;color:#E2E8F0">🏢 '+escHtml(d)+'</span><div style="display:flex;gap:6px"><button class="btn-edit" onclick="editDept('+i+',\''+escHtml(d)+'\')">Edit</button><button class="btn-danger" onclick="removeDept('+i+')">✕</button></div></div>';
+  });
+  html+='</div>';
+  document.getElementById("atab-departments").innerHTML=html;
+}
+function addDept(){var v=document.getElementById("new-dept").value.trim();if(!v||departments.includes(v)){notify("Invalid or duplicate department.","error");return}departments.push(v);document.getElementById("new-dept").value="";renderDepartments();buildForm();notify("Department added")}
+function removeDept(i){if(confirm("Remove this department?")){departments.splice(i,1);renderDepartments();buildForm();notify("Department removed","error")}}
+function editDept(i,old){
+  document.getElementById("modal-content").innerHTML='<div style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:18px">Edit Department</div><div style="margin-bottom:20px"><label class="field-label">Department Name</label><input class="inp" id="edit-dept-val" value="'+escHtml(old)+'"/></div><div style="display:flex;gap:10px"><button class="btn-primary" onclick="saveDept('+i+')" style="flex:1">Save</button><button class="btn-ghost" onclick="closeModal()">Cancel</button></div>';
+  document.getElementById("modal").style.display="flex";
+}
+function saveDept(i){var v=document.getElementById("edit-dept-val").value.trim();if(!v){notify("Name cannot be empty.","error");return}departments[i]=v;closeModal();renderDepartments();buildForm();notify("Department updated")}
+
+// ═══════════════════════════════════════════
+// RIDE TYPES TAB
+// ═══════════════════════════════════════════
+function renderRideTypes(){
+  var html='<div style="margin-bottom:22px"><h2 style="font-size:22px;font-weight:700;color:#F8FAFC;margin:0">Ride Types</h2><p style="color:#64748B;font-size:13px;margin-top:3px">Edit labels, icons and colors shown in the employee form</p></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">';
+  rideTypes.forEach(function(rt){
+    html+='<div class="rt-card"><div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:11px;background:'+rt.color+'18;display:flex;align-items:center;justify-content:center;font-size:22px">'+rt.icon+'</div><div><div style="font-size:14px;font-weight:600;color:#F8FAFC">'+escHtml(rt.label)+'</div><div style="font-size:12px;color:#64748B;font-family:\'DM Mono\',monospace">'+escHtml(rt.color)+'</div></div></div><button class="btn-edit" onclick="openRtModal(\''+rt.id+'\')">Edit</button></div></div>';
+  });
+  html+='</div>';
+  document.getElementById("atab-ridetypes").innerHTML=html;
+}
+function openRtModal(id){
+  var rt=rideTypes.find(function(r){return r.id===id});
+  document.getElementById("modal-content").innerHTML='<div style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:18px">Edit Ride Type</div><div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px"><div><label class="field-label">Label</label><input class="inp" id="rt-label" value="'+escHtml(rt.label)+'"/></div><div><label class="field-label">Icon (paste an emoji)</label><input class="inp" id="rt-icon" value="'+rt.icon+'" placeholder="✈️"/></div><div><label class="field-label">Color (hex code)</label><input class="inp" id="rt-color" value="'+rt.color+'" placeholder="#3B82F6"/></div></div><div style="display:flex;gap:10px"><button class="btn-primary" onclick="saveRt(\''+id+'\')" style="flex:1">Save Changes</button><button class="btn-ghost" onclick="closeModal()">Cancel</button></div>';
+  document.getElementById("modal").style.display="flex";
+}
+function saveRt(id){
+  var rt=rideTypes.find(function(r){return r.id===id});
+  rt.label=document.getElementById("rt-label").value.trim()||rt.label;
+  rt.icon=document.getElementById("rt-icon").value.trim()||rt.icon;
+  rt.color=document.getElementById("rt-color").value.trim()||rt.color;
+  closeModal();renderRideTypes();buildForm();notify("Ride type updated");
 }
 
-// ── Inline Edit ───────────────────────────────────────────────
-function EditInline({ value, onSave, onCancel }) {
-  const [v, setV] = useState(value);
-  return (
-    <div style={{ display:"flex", gap:8, flex:1 }}>
-      <input value={v} onChange={e=>setV(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")onSave(v);if(e.key==="Escape")onCancel();}} style={{ ...IS, flex:1, padding:"6px 10px", fontSize:13 }} autoFocus />
-      <button onClick={()=>onSave(v)} style={{ padding:"5px 10px", borderRadius:6, border:"none", background:"#10B981", color:"white", fontSize:12, cursor:"pointer" }}>✓</button>
-      <button onClick={onCancel} style={{ padding:"5px 10px", borderRadius:6, border:"1px solid #334155", background:"transparent", color:"#94A3B8", fontSize:12, cursor:"pointer" }}>✕</button>
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+buildForm();
+switchView("employee");
 </script>
 </body>
 </html>
